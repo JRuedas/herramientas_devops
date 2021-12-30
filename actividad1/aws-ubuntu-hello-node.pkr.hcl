@@ -12,11 +12,8 @@ source "amazon-ebs" "hello-node-jonatan" {
   instance_type          = "t2.micro"
   region                 = "us-east-1"
   source_ami             = "ami-0230aba74330fed22"
-  // vpc_id                 = "vpc-xxxxxxxx"
-  // subnet_id              = "subnet-xxxxxxxx"
-  // associate_public_ip_address = "true"
   ssh_username           = "ubuntu"
-  profile                = "jruedas"
+  profile                = "upm"
   skip_region_validation = true
 }
 
@@ -29,7 +26,16 @@ build {
   }
 
   provisioner "shell" {
-    script = "provision_image.sh"
+    script = "provision_node.sh"
+  }
+
+  provisioner "file" {
+    source      = "hello-nginx-conf"
+    destination = "/tmp/nginx-conf"
+  }
+
+  provisioner "shell" {
+    script = "provision_nginx.sh"
   }
 
   post-processor "manifest" {
