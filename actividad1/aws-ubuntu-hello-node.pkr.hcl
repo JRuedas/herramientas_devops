@@ -20,23 +20,28 @@ source "amazon-ebs" "hello-node-jonatan" {
 build {
   source "amazon-ebs.hello-node-jonatan" {}
 
-  provisioner "file" {
-    source      = "hello-jruedas-node.js"
-    destination = "/tmp/hello-jruedas-node.js"
+  provisioner "ansible" {
+    playbook_file = "./playbook.yaml"
+    extra_arguments = [ "-v" ]
   }
 
-  provisioner "shell" {
-    script = "provision_node.sh"
-  }
+  // provisioner "file" {
+  //   source      = "hello-jruedas-node.js"
+  //   destination = "/tmp/hello-jruedas-node.js"
+  // }
 
-  provisioner "file" {
-    source      = "hello-nginx-conf"
-    destination = "/tmp/nginx-conf"
-  }
+  // provisioner "shell" {
+  //   script = "provision_node.sh"
+  // }
 
-  provisioner "shell" {
-    script = "provision_nginx.sh"
-  }
+  // provisioner "file" {
+  //   source      = "hello-nginx-conf"
+  //   destination = "/tmp/nginx-conf"
+  // }
+
+  // provisioner "shell" {
+  //   script = "provision_nginx.sh"
+  // }
 
   post-processor "manifest" {
     output = "output.json"

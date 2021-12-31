@@ -1,0 +1,84 @@
+- name: Provision Node App
+  hosts: default
+  vars:
+    ansible_python_interpreter: auto
+  tasks:
+    - name: Wait 5 seconds for APT to complete on AWS instances
+      pause:
+        seconds: 5
+    - name: Remove list lock
+      become: true
+      file:
+        path: /var/lib/apt/lists/lock
+        state: absent
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - nodejs
+          - build-essential
+          - npm
+        state: present
+    - name: Install pm2 package globally
+      become: true
+      shell: 
+        cmd: npm install pm2@latest -g
+    - name: Creates app directory
+      file:
+        path: ~/app
+        state: directory
+    - name: Copy JS app to app directory
+      copy:
+        src: ./hello-jruedas-node.js
+        dest: /home/ubuntu/app/hello-jruedas-node.js
+    - name: Kills PM2 processes
+      shell: 
+        cmd: pm2 kill
+    - name: Starts PM2 on startup
+      shell: 
+        cmd: pm2 startup systemd | grep "sudo" | sh
+    - name: Starts PM2 app
+      become: true
+      shell: 
+        cmd: sudo systemctl start pm2-ubuntu
+    - name: Starts JS app
+      shell: 
+        cmd: pm2 start ~/app/hello-jruedas-node.js
+    - name: Saves PM2 state
+      shell: 
+        cmd: pm2 save
+- name: Provision Nginx
+  hosts: default
+  tasks:
+    - name: Disable apache service
+      become: true
+      service:
+        name: apache2
+        enabled: false
+        state: stopped
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - nginx
+        state: present
+    - name: Delete default nginx configuration file
+      become: true
+      file:
+        state: absent
+        path: /etc/nginx/sites-available/default
+    - name: Copy Nginx custom configuration as the default configuration
+      become: true
+      copy:
+        src: ./hello-nginx-conf
+        dest: /etc/nginx/sites-available/default
+    - name: Validates new configuration
+      become: true
+      shell: 
+        cmd: nginx -t
+    - name: Reload nginx config
+      become: true
+      service:
+        name: nginx
+        enabled: true
+        state: reloaded
