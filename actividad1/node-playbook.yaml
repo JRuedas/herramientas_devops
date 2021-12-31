@@ -3,9 +3,9 @@
   vars:
     ansible_python_interpreter: auto
   tasks:
-    - name: Wait 5 seconds for APT to complete on AWS instances
+    - name: Wait 8 seconds for APT to complete on AWS instances
       pause:
-        seconds: 5
+        seconds: 8
     - name: Remove list lock
       become: true
       file:
@@ -47,38 +47,3 @@
     - name: Saves PM2 state
       shell: 
         cmd: pm2 save
-- name: Provision Nginx
-  hosts: default
-  tasks:
-    - name: Disable apache service
-      become: true
-      service:
-        name: apache2
-        enabled: false
-        state: stopped
-    - name: Install packages
-      become: true
-      apt: 
-        name: 
-          - nginx
-        state: present
-    - name: Delete default nginx configuration file
-      become: true
-      file:
-        state: absent
-        path: /etc/nginx/sites-available/default
-    - name: Copy Nginx custom configuration as the default configuration
-      become: true
-      copy:
-        src: ./hello-nginx-conf
-        dest: /etc/nginx/sites-available/default
-    - name: Validates new configuration
-      become: true
-      shell: 
-        cmd: nginx -t
-    - name: Reload nginx config
-      become: true
-      service:
-        name: nginx
-        enabled: true
-        state: reloaded

@@ -1,0 +1,31 @@
+- name: Provision metricbeat and filebeat
+  hosts: default
+  vars:
+    ansible_python_interpreter: auto
+  tasks:
+    - name: Add Elasticsearch Apt key
+      become: true
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+    - name: Add Elasticsearch repository.
+      become: true
+      apt_repository:
+        repo: 'deb https://artifacts.elastic.co/packages/oss-7.x/apt stable main'
+        state: present
+        update_cache: true
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - metricbeat
+          - filebeat
+        state: present
+    - name: Enable metricbeat and filebeat services
+      become: true
+      service:
+        name: 
+          - metricbeat
+          - filebeat
+        enabled: true
+        state: started

@@ -21,26 +21,17 @@ build {
   source "amazon-ebs.hello-node-jonatan" {}
 
   provisioner "ansible" {
-    playbook_file   = "./playbook.yaml"
+    playbook_file = "./node-playbook.yaml"
   }
 
-  // provisioner "file" {
-  //   source      = "hello-jruedas-node.js"
-  //   destination = "/tmp/hello-jruedas-node.js"
-  // }
+  provisioner "ansible" {
+    playbook_file = "./nginx-playbook.yaml"
+  }
 
-  // provisioner "shell" {
-  //   script = "provision_node.sh"
-  // }
+  provisioner "ansible" {
+    playbook_file = "./metrics-playbook.yaml"
+  }
 
-  // provisioner "file" {
-  //   source      = "hello-nginx-conf"
-  //   destination = "/tmp/nginx-conf"
-  // }
-
-  // provisioner "shell" {
-  //   script = "provision_nginx.sh"
-  // }
 
   post-processor "manifest" {
     output = "output.json"
