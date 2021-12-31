@@ -21,11 +21,15 @@
           - metricbeat
           - filebeat
         state: present
-    - name: Enable metricbeat and filebeat services
+    - name: Enable metricbeat services
       become: true
       service:
-        name: 
-          - metricbeat
-          - filebeat
+        name: metricbeat
+        enabled: true
+        state: started
+    - name: Enable filebeat services
+      become: true
+      service:
+        name: filebeat
         enabled: true
         state: started
