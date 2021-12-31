@@ -21,8 +21,7 @@ build {
   source "amazon-ebs.hello-node-jonatan" {}
 
   provisioner "ansible" {
-    playbook_file = "./playbook.yaml"
-    extra_arguments = [ "-v" ]
+    playbook_file   = "./playbook.yaml"
   }
 
   // provisioner "file" {
