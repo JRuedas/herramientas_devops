@@ -19,6 +19,7 @@
           - build-essential
           - npm
         state: present
+        update_cache: yes
     - name: Install pm2 package globally
       become: true
       shell: 
