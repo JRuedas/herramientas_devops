@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  profile = "upm"
+  profile = "default"
   region  = "us-east-1"
 }
 

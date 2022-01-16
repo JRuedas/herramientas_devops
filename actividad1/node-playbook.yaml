@@ -3,14 +3,15 @@
   vars:
     ansible_python_interpreter: auto
   tasks:
-    - name: Wait 8 seconds for APT to complete on AWS instances
-      pause:
-        seconds: 8
-    - name: Remove list lock
+    - name: Reboot host and wait restart to avoid DPKG lock bug
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 10
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 60
+        test_command: whoami
       become: true
-      file:
-        path: /var/lib/apt/lists/lock
-        state: absent
     - name: Install packages
       become: true
       apt: 
@@ -41,7 +42,7 @@
     - name: Starts PM2 app
       become: true
       shell: 
-        cmd: sudo systemctl start pm2-ubuntu
+        cmd: systemctl start pm2-ubuntu
     - name: Starts JS app
       shell: 
         cmd: pm2 start ~/app/hello-jruedas-node.js
