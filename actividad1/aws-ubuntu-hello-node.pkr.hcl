@@ -7,8 +7,7 @@ packer {
   }
 }
 
-source "amazon-ebs" "hello-node-jonatan" {
-  ami_name               = "hello-node-jonatan"
+source "amazon-ebs" "ubuntu-jonatan" {
   instance_type          = "t2.micro"
   region                 = "us-east-1"
   source_ami             = "ami-0230aba74330fed22"
@@ -17,21 +16,11 @@ source "amazon-ebs" "hello-node-jonatan" {
   skip_region_validation = true
 }
 
-source "amazon-ebs" "mongodb-jonatan" {
-  ami_name               = "mongodb-jonatan"
-  instance_type          = "t2.micro"
-  region                 = "us-east-1"
-  source_ami             = "ami-0230aba74330fed22"
-  ssh_username           = "ubuntu"
-  profile                = "default"
-  skip_region_validation = true
-}
-
-source "azure-arm" "hello-node-jonatan" {
+source "azure-arm" "azure-ubuntu-jonatan" {
   subscription_id = "your_subscription_id"
 
-  managed_image_resource_group_name = "hello-node-jonatan"
-  managed_image_name                = "hello-node-jonatan"
+  managed_image_resource_group_name = "ubuntu-jonatan"
+  managed_image_name                = "ubuntu-jonatan"
 
   os_type         = "Linux"
   image_publisher = "Canonical"
@@ -44,9 +33,13 @@ source "azure-arm" "hello-node-jonatan" {
 }
 
 build {
-  source "amazon-ebs.hello-node-jonatan" {}
+  name = "node-app"
 
-  source "azure-arm.hello-node-jonatan" {}
+  source "amazon-ebs.ubuntu-jonatan" {
+    ami_name = "hello-node-jonatan"
+  }
+
+  source "azure-arm.azure-ubuntu-jonatan" {}
 
   provisioner "ansible" {
     playbook_file = "./node-playbook.yaml"
@@ -62,7 +55,11 @@ build {
 }
 
 build {
-  source "amazon-ebs.mongodb-jonatan" {}
+  name = "mongodb"
+
+  source "amazon-ebs.ubuntu-jonatan" {
+    ami_name = "mongodb-jonatan"
+  }
 
   provisioner "ansible" {
     playbook_file = "./mongodb-playbook.yaml"
