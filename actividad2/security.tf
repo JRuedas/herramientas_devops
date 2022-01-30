@@ -7,6 +7,7 @@ module "ssh_sg" {
   vpc_id              = module.custom_vpc.vpc_id
   ingress_cidr_blocks = var.sg_ingress_cidr_block
   ingress_rules       = ["ssh-tcp"]
+  egress_rules        = ["all-all"]
   tags                = var.tags
 }
 
@@ -19,6 +20,7 @@ module "web_server_sg" {
   vpc_id              = module.custom_vpc.vpc_id
   ingress_cidr_blocks = var.sg_ingress_cidr_block
   ingress_rules       = ["http-80-tcp"]
+  egress_rules        = ["all-all"]
   tags                = var.tags
 }
 
@@ -31,5 +33,6 @@ module "db_server_sg" {
   vpc_id              = module.custom_vpc.vpc_id
   ingress_cidr_blocks = var.sg_ingress_cidr_block
   ingress_rules       = ["mongodb-27017-tcp"]
+  egress_rules        = ["all-all"]
   tags                = var.tags
 }
