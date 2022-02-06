@@ -53,5 +53,6 @@ module "ec2_mongo_instance" {
   vpc_security_group_ids      = [module.ssh_sg.security_group_id, module.db_server_sg.security_group_id]
   subnet_id                   = module.custom_vpc.public_subnets[0]
   associate_public_ip_address = true
+  private_ip                  = var.db_private_ip
   tags                        = var.tags
 }
