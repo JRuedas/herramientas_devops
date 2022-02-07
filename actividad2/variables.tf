@@ -1,7 +1,7 @@
 variable "aws_profile" {
   description = "AWS profile that will be used to create the infrastructure."
   type        = string
-  default     = "default"
+  default     = "personal"
 }
 
 variable "aws_region" {
@@ -59,7 +59,7 @@ variable "db_instance_name" {
 variable "db_private_ip" {
   description = "Private IP of the AWS EC2 database instance that will be created."
   type        = string
-  default     = "192.168.1.1"
+  default     = "192.168.1.5"
 }
 
 // VPC variables.
