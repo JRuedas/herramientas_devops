@@ -25,3 +25,14 @@
         name: mongodb
         enabled: true
         state: started
+    - name: Bind any IP to mongo
+      become: true
+      lineinfile:
+        path: /etc/mongodb.conf
+        regexp: '^bind_ip = 127.0.0.1$'
+        line: 'bind_ip = 0.0.0.0'
+    - name: Restart MongoDB
+      become: true
+      service:
+        name: mongodb
+        state: restarted
