@@ -85,6 +85,12 @@ variable "vpc_azs" {
 variable "vpc_public_subnets" {
   description = "Public subnets for VPC."
   type        = list(string)
+  default     = ["192.168.2.0/24"]
+}
+
+variable "vpc_private_subnets" {
+  description = "Private subnets for VPC."
+  type        = list(string)
   default     = ["192.168.1.0/24"]
 }
 
@@ -122,4 +128,18 @@ variable "key_algorithm" {
   description = "Algorithm of the AWS Key Pair."
   type        = string
   default     = "RSA"
+}
+
+// ELB variables.
+
+variable "elb_name" {
+  description = "Name of the AWS ELB that will be created."
+  type        = string
+  default     = "jruedas-elb"
+}
+
+variable "elb_number_instances" {
+  description = "Number of the AWS EC2 instances that will be balanced."
+  type        = number
+  default     = 2
 }

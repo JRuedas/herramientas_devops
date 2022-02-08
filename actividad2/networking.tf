@@ -7,6 +7,7 @@ module "custom_vpc" {
   enable_dns_hostnames    = true
   azs                     = var.vpc_azs
   public_subnets          = var.vpc_public_subnets
+  private_subnets         = var.vpc_private_subnets
   map_public_ip_on_launch = false
   tags                    = var.tags
 }
