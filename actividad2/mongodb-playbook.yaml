@@ -1,0 +1,38 @@
+- name: Provision MongoDB
+  hosts: default
+  vars:
+    ansible_python_interpreter: auto
+  tasks:
+    - name: Reboot host and wait restart to avoid DPKG lock bug
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 10
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 60
+        test_command: whoami
+      become: true
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - mongodb
+        state: present
+        update_cache: yes
+    - name: Enable MongoDB service
+      become: true
+      service:
+        name: mongodb
+        enabled: true
+        state: started
+    - name: Bind any IP to mongo
+      become: true
+      lineinfile:
+        path: /etc/mongodb.conf
+        regexp: '^bind_ip = 127.0.0.1$'
+        line: 'bind_ip = 0.0.0.0'
+    - name: Restart MongoDB
+      become: true
+      service:
+        name: mongodb
+        state: restarted
