@@ -1,3 +1,4 @@
+# Creates the SSH security group
 module "ssh_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"
@@ -11,6 +12,7 @@ module "ssh_sg" {
   tags                = var.tags
 }
 
+# Creates the HTTP security group
 module "web_server_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"
@@ -24,6 +26,7 @@ module "web_server_sg" {
   tags                = var.tags
 }
 
+# Creates the DB security group
 module "db_server_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"

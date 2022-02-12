@@ -1,3 +1,4 @@
+# Create the lambda function from the source code specified in the variables.
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 

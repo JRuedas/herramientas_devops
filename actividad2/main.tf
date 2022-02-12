@@ -1,3 +1,4 @@
+# Specifies the required providers and terraform version
 terraform {
   required_providers {
     aws = {

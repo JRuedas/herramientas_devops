@@ -1,3 +1,5 @@
+# AWS Provider
+
 variable "aws_profile" {
   description = "AWS profile that will be used to create the infrastructure."
   type        = string
@@ -50,18 +52,18 @@ variable "autoscaling_launch_template_description" {
   default     = "Launch template example"
 }
 
+variable "autoscaling_number_of_instances" {
+  description = "Number of the instances wanted for the AWS autoscaling group."
+  type        = number
+  default     = 2
+}
+
 // EC2 instance variables.
 
 variable "instance_type" {
   description = "Type of the AWS EC2 instance that will be created."
   type        = string
   default     = "t2.micro"
-}
-
-variable "web_instance_name" {
-  description = "Name of the AWS EC2 web instance that will be created."
-  type        = string
-  default     = "web_instance"
 }
 
 variable "db_instance_name" {

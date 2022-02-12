@@ -1,3 +1,4 @@
+# Creates the custom VPC. A public and private subnets, route tables, route associations, NAT gateway and Internet gateway
 module "custom_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.11.5"

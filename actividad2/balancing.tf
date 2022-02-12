@@ -1,3 +1,4 @@
+# Create the Elastic Load Balancer. Attatch the instances and redirect the HTTP (80) trafic to the instances. Check the instances port evert 30 seconds.
 module "elb_http" {
   source  = "terraform-aws-modules/elb/aws"
   version = "~> 2.0"
