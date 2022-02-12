@@ -3,7 +3,7 @@
 variable "aws_profile" {
   description = "AWS profile that will be used to create the infrastructure."
   type        = string
-  default     = "personal"
+  default     = "default"
 }
 
 variable "aws_region" {
