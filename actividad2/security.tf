@@ -1,4 +1,4 @@
-# Creates the SSH security group
+# Creates the SSH security group with ingress and egres rules
 module "ssh_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"
@@ -12,7 +12,7 @@ module "ssh_sg" {
   tags                = var.tags
 }
 
-# Creates the HTTP security group
+# Creates the HTTP security group with ingress and egres rules
 module "web_server_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"
@@ -26,7 +26,7 @@ module "web_server_sg" {
   tags                = var.tags
 }
 
-# Creates the DB security group
+# Creates the DB security group with ingress and egres rules
 module "db_server_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.8.0"

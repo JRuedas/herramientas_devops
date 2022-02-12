@@ -1,4 +1,5 @@
-# Create the lambda function from the source code specified in the variables.
+# Create the lambda function from the source code specified in the variables. Creates the IAM policy and role for the Lambda function. 
+# Attatches the policy and roles to the function. Creates the Archive.
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 
