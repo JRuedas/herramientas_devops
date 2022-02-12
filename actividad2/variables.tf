@@ -143,3 +143,35 @@ variable "elb_number_instances" {
   type        = number
   default     = 2
 }
+
+// Lambda variables.
+
+variable "function_name" {
+  description = "Name of the AWS Lambda that will be created."
+  type        = string
+  default     = "jruedas-greetings"
+}
+
+variable "function_description" {
+  description = "Description of the AWS Lambda that will be created."
+  type        = string
+  default     = "Hello world lambda function"
+}
+
+variable "function_handler" {
+  description = "Handler of the AWS Lambda that will be created."
+  type        = string
+  default     = "hello.greetings"
+}
+
+variable "function_source_path" {
+  description = "Source code path of the AWS Lambda that will be created."
+  type        = string
+  default     = "./hello.py"
+}
+
+variable "function_runtime" {
+  description = "Runtime of the AWS Lambda that will be created."
+  type        = string
+  default     = "python3.8"
+}
