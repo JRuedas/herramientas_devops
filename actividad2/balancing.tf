@@ -23,7 +23,5 @@ module "elb_http" {
     timeout             = 5
   }
 
-  number_of_instances = var.elb_number_instances
-  instances           = [module.ec2_web_instance.id, module.ec2_web_instance-2.id]
-  tags                = var.tags
+  tags = var.tags
 }

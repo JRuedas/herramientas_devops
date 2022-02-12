@@ -7,5 +7,5 @@ module "lambda_function" {
   source_path   = var.function_source_path
   runtime       = "python3.8"
 
-  tags          = var.tags
+  tags = var.tags
 }

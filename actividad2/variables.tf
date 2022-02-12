@@ -36,6 +36,20 @@ variable "ami_virtualization_type" {
   default     = "hvm"
 }
 
+// Autoscaling group variables.
+
+variable "autoscaling_web_name" {
+  description = "Name of the AWS Autoscaling group that will be created."
+  type        = string
+  default     = "jruedas-asg"
+}
+
+variable "autoscaling_launch_template_description" {
+  description = "Description of the AWS Launch template that will be created."
+  type        = string
+  default     = "Launch template example"
+}
+
 // EC2 instance variables.
 
 variable "instance_type" {
