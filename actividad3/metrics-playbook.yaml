@@ -1,0 +1,71 @@
+- name: Provision metricbeat and filebeat
+  hosts: default
+  vars:
+    ansible_python_interpreter: auto
+  tasks:
+    - name: Add Elasticsearch Apt key
+      become: true
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+    - name: Add Elasticsearch repository.
+      become: true
+      apt_repository:
+        repo: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
+        state: present
+        update_cache: true
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - elasticsearch
+          - kibana
+        state: present
+        update_cache: yes        
+    - name: Enable elasticsearch service
+      become: true
+      service:
+        name: elasticsearch
+        enabled: true
+        state: started
+    - name: Enable kibana service
+      become: true
+      service:
+        name: kibana
+        enabled: true
+        state: started
+## Nginx
+    - name: Disable apache service if exist
+      become: true
+      service:
+        name: apache2
+        enabled: false
+        state: stopped
+      register: unused_disable
+      failed_when: "unused_disable is failed and ('find' not in unused_disable.msg and 'found' not in unused_disable.msg)"
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - nginx
+        state: present
+    - name: Delete default nginx configuration file
+      become: true
+      file:
+        state: absent
+        path: /etc/nginx/sites-available/default
+    - name: Copy Nginx custom configuration as the default configuration
+      become: true
+      copy:
+        src: ./hello-nginx-conf
+        dest: /etc/nginx/sites-available/default
+    - name: Validates new configuration
+      become: true
+      shell: 
+        cmd: nginx -t
+    - name: Reload nginx config
+      become: true
+      service:
+        name: nginx
+        enabled: true
+        state: reloaded        
