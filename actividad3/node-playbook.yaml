@@ -1,44 +1,47 @@
 - name: Provision Node App
-  hosts: default
+  hosts: all
   vars:
     ansible_python_interpreter: auto
-  tasks:
-    - name: Download node setup script
-      get_url:
-        url: https://deb.nodesource.com/setup_14.x
-        dest: ~/nodesource_setup.sh
-        mode: 0755
-    - name: Execute node setup script
+  pre_tasks:
+    - name: Reboot host and wait restart to avoid DPKG lock bug
       become: true
-      shell: /home/vagrant/nodesource_setup.sh
-    - name: Install packages
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 10
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 60
+        test_command: whoami
+    - name: Add universe repository for bionic
       become: true
-      apt: 
-        name: 
-          - nodejs
-          - build-essential
+      apt_repository:
+        repo: deb http://archive.ubuntu.com/ubuntu bionic universe
         state: present
-        update_cache: yes        
+      when: ansible_distribution_release == 'bionic'
+  roles:
+    - name: geerlingguy.nodejs
+      become: true
+  tasks:
     - name: Creates server-example directory
       file:
         path: ~/server-example
         state: directory
-    - name: Install pm2 package globally
+    - name: "Install PM2"
       become: true
-      shell: 
-        cmd: npm install pm2@latest -g        
-    - name: Install apollo-server package
-      become: true
-      shell: 
-        cmd: npm install --prefix /home/vagrant/server-example/ apollo-server
-    - name: Install graphql package
-      become: true
-      shell: 
-        cmd: npm install --prefix /home/vagrant/server-example/ graphql
+      npm:
+        global: yes
+        name: pm2
+    - name: "Install Apollo and GraphQL"
+      npm:
+        path: /home/ubuntu/server-example
+        name: "{{ item }}"
+      loop:
+        - apollo-server
+        - graphql
     - name: Copy JS app to app directory
       copy:
         src: ./index.js
-        dest: ~/server-example/index.js
+        dest: /home/ubuntu/server-example/index.js
     - name: Kills PM2 processes
       shell: 
         cmd: pm2 kill
@@ -48,10 +51,10 @@
     - name: Starts PM2 app
       become: true
       shell: 
-        cmd: systemctl start pm2-vagrant
+        cmd: systemctl start pm2-ubuntu
     - name: Starts JS app
       shell: 
-        cmd: pm2 start ~/server-example/index.js
+        cmd: pm2 start /home/ubuntu/server-example/index.js
     - name: Saves PM2 state
       shell: 
         cmd: pm2 save

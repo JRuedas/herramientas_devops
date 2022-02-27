@@ -1,7 +1,17 @@
 - name: Provision metricbeat and filebeat
-  hosts: default
+  hosts: all
   vars:
     ansible_python_interpreter: auto
+  pre_tasks:
+    - name: Reboot host and wait restart to avoid DPKG lock bug
+      become: true
+      reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 10
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 60
+        test_command: whoami
   tasks:
     - name: Add Elasticsearch Apt key
       become: true
@@ -13,15 +23,23 @@
       apt_repository:
         repo: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
         state: present
-        update_cache: true
     - name: Install packages
       become: true
       apt: 
         name: 
           - elasticsearch
           - kibana
+          - logstash
         state: present
-        update_cache: yes        
+        update_cache: yes
+    - name: Change Elasticsearch discovery type to 'single-node'
+      lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "discovery.type: single-node"
+    - name: Change Elasticsearch network host to '0.0.0.0'
+      lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        line: "network.host: 0.0.0.0"
     - name: Enable elasticsearch service
       become: true
       service:
@@ -34,6 +52,12 @@
         name: kibana
         enabled: true
         state: started
+    - name: Enable logstash service
+      become: true
+      service:
+        name: logstash
+        enabled: true
+        state: started      
 ## Nginx
     - name: Disable apache service if exist
       become: true
