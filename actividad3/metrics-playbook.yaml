@@ -40,6 +40,16 @@
       lineinfile:
         path: /etc/elasticsearch/elasticsearch.yml
         line: "network.host: 0.0.0.0"
+    - name: Copy input beats logstash
+      become: true
+      copy:
+        src: ./beats-input.conf
+        dest: /etc/logstash/conf.d/02-beats-input.conf
+    - name: Copy output elasticsearch logstash
+      become: true
+      copy:
+        src: ./elasticsearch-output.conf
+        dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
     - name: Enable elasticsearch service
       become: true
       service:
