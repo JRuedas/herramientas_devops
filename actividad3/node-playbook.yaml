@@ -132,15 +132,15 @@
       copy:
         src: ./configs/packetbeat.yml
         dest: /etc/packetbeat/packetbeat.yml
-    - name: Loads filebeat template
+    - name: Loads packetbeat template
       become: true
       shell: 
         cmd: packetbeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["192.168.1.50:9200"]'
-    - name: Loads filebeat kibana dashboards
+    - name: Loads packetbeat kibana dashboards
       become: true
       shell: 
         cmd: packetbeat setup -E output.logstash.enabled=false -E output.elasticsearch.hosts=['192.168.1.50:9200'] -E setup.kibana.host=192.168.1.50:8080
-    - name: Enable filebeat service
+    - name: Enable packetbeat service
       become: true
       service:
         name: packetbeat
