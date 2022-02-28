@@ -92,3 +92,25 @@ resource "aws_security_group" "allow_kibana_custom_http_port" {
 
   tags = var.tags
 }
+
+resource "aws_security_group" "allow_logstash_port" {
+  name        = "allow_logstash_port"
+  description = "Allow Logstash inbound connections"
+  vpc_id      = aws_vpc.custom-vpc.id
+
+  ingress {
+    from_port   = 5044
+    to_port     = 5044
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}

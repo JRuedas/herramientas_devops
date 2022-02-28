@@ -34,6 +34,12 @@ variable "elasticsearch_instance_type" {
   default     = "t2.medium"
 }
 
+variable "elasticsearch_ip" {
+  description = "Private IP of the AWS EC2 instance that will be created for the ElasticSearch server."
+  type        = string
+  default     = "192.168.1.50"
+}
+
 // VPC variables.
 
 variable "vpc_cidr" {

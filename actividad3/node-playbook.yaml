@@ -58,3 +58,91 @@
     - name: Saves PM2 state
       shell: 
         cmd: pm2 save
+########## Beats ##########
+    - name: Add Elasticsearch Apt key
+      become: true
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+    - name: Add Elasticsearch repository.
+      become: true
+      apt_repository:
+        repo: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
+        state: present
+    - name: Install packages
+      become: true
+      apt: 
+        name: 
+          - metricbeat
+          - filebeat
+          - packetbeat
+        state: present
+        update_cache: yes
+########## Metricbeat configuration ##########
+    - name: Configure metricbeat
+      become: true
+      copy:
+        src: ./configs/metricbeat.yml
+        dest: /etc/metricbeat/metricbeat.yml
+    - name: Loads metricbeat template 
+      become: true
+      shell: 
+        cmd: metricbeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["192.168.1.50:9200"]'
+    - name: Loads metricbeat kibana dashboards 
+      become: true
+      shell: 
+        cmd: metricbeat setup -e -E output.elasticsearch.hosts=['192.168.1.50:9200'] -E setup.kibana.host=192.168.1.50:8080  
+    - name: Enable metricbeat service
+      become: true
+      service:
+        name: metricbeat
+        enabled: true
+        state: started
+########## Filebeat configuration ##########
+    - name: Configure filebeat
+      become: true
+      copy:
+        src: ./configs/filebeat.yml
+        dest: /etc/filebeat/filebeat.yml
+    - name: Enable filebeat module
+      become: true
+      shell: 
+        cmd: filebeat modules enable system
+    - name: Configure filebeat ingest process
+      become: true
+      shell: 
+        cmd: filebeat setup --pipelines --modules system
+    - name: Loads filebeat template
+      become: true
+      shell: 
+        cmd: filebeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["192.168.1.50:9200"]'
+    - name: Loads filebeat kibana dashboards
+      become: true
+      shell: 
+        cmd: filebeat setup -E output.logstash.enabled=false -E output.elasticsearch.hosts=['192.168.1.50:9200'] -E setup.kibana.host=192.168.1.50:8080
+    - name: Enable filebeat service
+      become: true
+      service:
+        name: filebeat
+        enabled: true
+        state: started
+########## Packetbeat configuration ##########
+    - name: Configure packetbeat to connect to Logstash
+      become: true
+      copy:
+        src: ./configs/packetbeat.yml
+        dest: /etc/packetbeat/packetbeat.yml
+    - name: Loads filebeat template
+      become: true
+      shell: 
+        cmd: packetbeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["192.168.1.50:9200"]'
+    - name: Loads filebeat kibana dashboards
+      become: true
+      shell: 
+        cmd: packetbeat setup -E output.logstash.enabled=false -E output.elasticsearch.hosts=['192.168.1.50:9200'] -E setup.kibana.host=192.168.1.50:8080
+    - name: Enable filebeat service
+      become: true
+      service:
+        name: packetbeat
+        enabled: true
+        state: started

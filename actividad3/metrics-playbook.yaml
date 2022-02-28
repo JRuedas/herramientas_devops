@@ -33,22 +33,24 @@
         state: present
         update_cache: yes
     - name: Change Elasticsearch discovery type to 'single-node'
+      become: true
       lineinfile:
         path: /etc/elasticsearch/elasticsearch.yml
         line: "discovery.type: single-node"
     - name: Change Elasticsearch network host to '0.0.0.0'
+      become: true
       lineinfile:
         path: /etc/elasticsearch/elasticsearch.yml
         line: "network.host: 0.0.0.0"
     - name: Copy input beats logstash
       become: true
       copy:
-        src: ./beats-input.conf
+        src: ./configs/beats-input.conf
         dest: /etc/logstash/conf.d/02-beats-input.conf
     - name: Copy output elasticsearch logstash
       become: true
       copy:
-        src: ./elasticsearch-output.conf
+        src: ./configs/elasticsearch-output.conf
         dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
     - name: Enable elasticsearch service
       become: true
@@ -67,7 +69,7 @@
       service:
         name: logstash
         enabled: true
-        state: started      
+        state: started
 ## Nginx
     - name: Disable apache service if exist
       become: true
@@ -91,7 +93,7 @@
     - name: Copy Nginx custom configuration as the default configuration
       become: true
       copy:
-        src: ./hello-nginx-conf
+        src: ./configs/hello-nginx-conf
         dest: /etc/nginx/sites-available/default
     - name: Validates new configuration
       become: true
