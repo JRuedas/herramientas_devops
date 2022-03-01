@@ -7,7 +7,7 @@ resource "aws_instance" "elasticsearch_node" {
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_elasticsearch_port.id, aws_security_group.allow_kibana_custom_http_port.id, aws_security_group.allow_logstash_port.id, aws_security_group.allow_apm_port.id]
   key_name                    = module.key_pair.key_pair_key_name
   private_ip                  = var.elasticsearch_ip
-  tags                        = {
+  tags = {
     Name = "elasticsearch"
   }
 
@@ -39,7 +39,7 @@ resource "aws_instance" "apollo_node" {
   subnet_id                   = aws_subnet.custom-public-subnet.id
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_apollo_port.id]
   key_name                    = module.key_pair.key_pair_key_name
-  tags                        = {
+  tags = {
     Name = "apollo"
   }
 
@@ -61,6 +61,6 @@ resource "aws_instance" "apollo_node" {
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.so_user} -i '${self.public_ip},' --private-key ${local_file.ssh_key.filename} node-playbook.yaml"
   }
-  
+
   depends_on = [aws_instance.elasticsearch_node]
 }
