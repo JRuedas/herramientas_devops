@@ -4,7 +4,7 @@ resource "aws_instance" "elasticsearch_node" {
   instance_type               = var.elasticsearch_instance_type
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.custom-public-subnet.id
-  vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_elasticsearch_port.id, aws_security_group.allow_kibana_custom_http_port.id, aws_security_group.allow_logstash_port.id]
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_elasticsearch_port.id, aws_security_group.allow_kibana_custom_http_port.id, aws_security_group.allow_logstash_port.id, aws_security_group.allow_apm_port.id]
   key_name                    = module.key_pair.key_pair_key_name
   private_ip                  = var.elasticsearch_ip
   tags                        = {

@@ -1,3 +1,11 @@
+// APM Agent configuration
+var apm = require('elastic-apm-node').start({
+   serviceName: '', 
+   secretToken: '', 
+   serverUrl: 'http://192.168.1.50:8200', 
+   environment: 'production' 
+  })
+
 const { ApolloServer, gql } = require('apollo-server');
 
 // A schema is a collection of type definitions (hence "typeDefs")

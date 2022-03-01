@@ -30,6 +30,7 @@
           - elasticsearch
           - kibana
           - logstash
+          - apm-server
         state: present
         update_cache: yes
     - name: Change Elasticsearch discovery type to 'single-node'
@@ -62,6 +63,16 @@
       lineinfile:
         path: /etc/kibana/kibana.yml
         line: "server.publicBaseUrl: \"http://{{ aws_domain }}:8080\""
+    - name: Configure APM Server
+      become: true
+      copy:
+        src: ./configs/apm-server.yml
+        dest: /etc/apm-server/apm-server.yml
+      # TODO: setup -E?
+    - name: Configure APM server ingest process
+      become_user: apm-server
+      shell: 
+        cmd: apm-server setup --pipelines
     - name: Enable elasticsearch service
       become: true
       service:
@@ -80,6 +91,11 @@
         name: logstash
         enabled: true
         state: started
+    - name: Enable APM server
+      service:
+        name: "apm-server"
+        state: started
+        enabled: yes
 ## Nginx
     - name: Disable apache service if exist
       become: true

@@ -1,0 +1,15 @@
+######################### APM Server Configuration #########################
+
+apm-server:
+  host: "localhost:8200"
+
+  #---------------------------- APM Server - Agent Configuration ----------------------------
+  kibana:
+    enabled: true
+    host: "localhost:5601"
+
+#================================ Outputs =================================
+
+#-------------------------- Elasticsearch output --------------------------
+output.elasticsearch:
+  hosts: ["localhost:9200"]

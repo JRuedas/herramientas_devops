@@ -114,3 +114,25 @@ resource "aws_security_group" "allow_logstash_port" {
 
   tags = var.tags
 }
+
+resource "aws_security_group" "allow_apm_port" {
+  name        = "allow_apm_port"
+  description = "Allow APM inbound connections"
+  vpc_id      = aws_vpc.custom-vpc.id
+
+  ingress {
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}
