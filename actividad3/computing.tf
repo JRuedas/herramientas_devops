@@ -27,7 +27,7 @@ resource "aws_instance" "elasticsearch_node" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.so_user} -i '${self.public_ip},' --private-key ${local_file.ssh_key.filename} metrics-playbook.yaml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.so_user} -i '${self.public_ip},' --private-key ${local_file.ssh_key.filename} metrics-playbook.yaml -e aws_domain='${self.public_dns}'"
   }
 }
 

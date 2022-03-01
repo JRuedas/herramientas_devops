@@ -52,6 +52,16 @@
       copy:
         src: ./configs/elasticsearch-output.conf
         dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
+    - name: Kibana dismiss data not secure notification
+      become: true
+      lineinfile:
+        path: /etc/kibana/kibana.yml
+        line: "security.showInsecureClusterWarning: false"
+    - name: Kibana add public base url
+      become: true
+      lineinfile:
+        path: /etc/kibana/kibana.yml
+        line: "server.publicBaseUrl: \"http://{{ aws_domain }}:8080\""
     - name: Enable elasticsearch service
       become: true
       service:
