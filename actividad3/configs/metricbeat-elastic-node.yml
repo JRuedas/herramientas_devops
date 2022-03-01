@@ -1,0 +1,32 @@
+###################### Metricbeat Configuration Example #######################
+
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+# ======================= Elasticsearch template setting =======================
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+
+# =================================== Kibana ===================================
+
+setup.kibana:
+  host: "localhost:5601"
+
+# ---------------------------- Elasticsearch Output ----------------------------
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+# ------------------------------ Logstash Output -------------------------------
+# output.logstash:
+#   hosts: ["192.168.1.50:5044"]
+
+# ================================= Processors =================================
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~

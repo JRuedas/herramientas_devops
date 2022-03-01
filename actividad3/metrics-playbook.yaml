@@ -30,6 +30,7 @@
           - elasticsearch
           - kibana
           - logstash
+          - metricbeat
           - apm-server
         state: present
         update_cache: yes
@@ -63,22 +64,12 @@
       lineinfile:
         path: /etc/kibana/kibana.yml
         line: "server.publicBaseUrl: \"http://{{ aws_domain }}:8080\""
-    - name: Configure APM Server
-      become: true
-      copy:
-        src: ./configs/apm-server.yml
-        dest: /etc/apm-server/apm-server.yml
-      # TODO: setup -E?
-    - name: Configure APM server ingest process
-      become_user: apm-server
-      shell: 
-        cmd: apm-server setup --pipelines
     - name: Enable elasticsearch service
       become: true
       service:
         name: elasticsearch
         enabled: true
-        state: started
+        state: started  
     - name: Enable kibana service
       become: true
       service:
@@ -91,7 +82,36 @@
         name: logstash
         enabled: true
         state: started
+### Metricbeat ###
+    - name: Configure metricbeat
+      become: true
+      copy:
+        src: ./configs/metricbeat.yml
+        dest: /etc/metricbeat/metricbeat.yml
+    - name: Loads metricbeat template 
+      become: true
+      shell: 
+        cmd: metricbeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["localhost:9200"]'
+    - name: Enable metricbeat service
+      become: true
+      service:
+        name: metricbeat
+        enabled: true
+        state: started        
+### APM Server ###
+    - name: Configure APM Server
+      become: true
+      copy:
+        src: ./configs/apm-server.yml
+        dest: /etc/apm-server/apm-server.yml
+      # TODO: setup -E?
+    - name: Configure APM server ingest process
+      become: true
+      become_user: apm-server
+      shell: 
+        cmd: apm-server setup --pipelines
     - name: Enable APM server
+      become: true
       service:
         name: "apm-server"
         state: started

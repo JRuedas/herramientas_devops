@@ -1,6 +1,6 @@
 // APM Agent configuration
 var apm = require('elastic-apm-node').start({
-   serviceName: '', 
+   serviceName: 'apollo', 
    secretToken: '', 
    serverUrl: 'http://192.168.1.50:8200', 
    environment: 'production' 
