@@ -104,7 +104,6 @@
       copy:
         src: ./configs/apm-server.yml
         dest: /etc/apm-server/apm-server.yml
-      # TODO: setup -E?
     - name: Configure APM server ingest process
       become: true
       become_user: apm-server
