@@ -127,7 +127,7 @@
         enabled: true
         state: started
 ########## Packetbeat configuration ##########
-    - name: Configure packetbeat to connect to Logstash
+    - name: Configure packetbeat
       become: true
       copy:
         src: ./configs/packetbeat.yml

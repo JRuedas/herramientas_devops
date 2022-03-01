@@ -99,7 +99,6 @@
       become: true
       lineinfile:
         path: /etc/nginx/nginx.conf
-        regexp: 'http {'
         insertafter: '^http {'
         line: client_max_body_size 10M;
     - name: Validates new configuration
